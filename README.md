@@ -1,4 +1,4 @@
-## Important Information (about how the exercise was accomplished, not how the code works):
+## Important Information (about how the exercise was accomplished, not how the code works)
 I would like to draw your attention to the fact that I used an off-the-shelf [solution](https://github.com/django/django/blob/main/django/core/paginator.py) from the Django framework as the base for this exercise. I found this way to be the most efficient, as I knew how it worked and understood how it could be adapted to the current exercise.
 
 
