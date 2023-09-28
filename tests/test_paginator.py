@@ -1,5 +1,6 @@
 import unittest
 
+from src.exceptions import AroundNotAnInteger, BoundaryNotAnInteger, CurrentPageNotAnInteger, EmptyPage
 from src.paginator import Paginator
 
 
@@ -44,11 +45,39 @@ class TestPaginator(unittest.TestCase):
 
     def test_maximum_values(self):
         self.assertEqual(
-            self.paginator.make_result(
-                current_page=self.total_pages, boundaries=self.total_pages, around=self.total_pages
-            ),
+            self.paginator.make_result(current_page=self.total_pages, boundaries=self.total_pages, around=2),
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
         )
+
+    def test_current_page_errors(self):
+        for unexcepted_value, exception, message_error in (
+            ('1', CurrentPageNotAnInteger, 'That current page type \"<class \'str\'>\" is not an integer'),
+            (0, EmptyPage, 'That current page "0" is less than 1'),
+            (12, EmptyPage, 'That current page "12" is greater than total_pages "11"'),
+        ):
+            with self.assertRaises(exception) as context:
+                self.paginator.make_result(current_page=unexcepted_value, boundaries=self.total_pages, around=2)
+            self.assertEqual(str(context.exception), message_error)
+
+    def test_boundary_errors(self):
+        for unexcepted_value, exception, message_error in (
+            ('1', BoundaryNotAnInteger, 'That boundary type \"<class \'str\'>\" is not an integer'),
+            (-1, EmptyPage, 'That boundary value "-1" is less than 0'),
+            (12, EmptyPage, 'That boundary values "12" is greater than total_pages "11"'),
+        ):
+            with self.assertRaises(exception) as context:
+                self.paginator.make_result(current_page=5, boundaries=unexcepted_value, around=2)
+            self.assertEqual(str(context.exception), message_error)
+
+    def test_around_errors(self):
+        for unexcepted_value, exception, message_error in (
+            ('1', AroundNotAnInteger, 'That around type \"<class \'str\'>\" is not an integer'),
+            (-1, EmptyPage, 'That around value "-1" is less than 0'),
+            (12, EmptyPage, 'That around values "12" is greater than total_pages "11"'),
+        ):
+            with self.assertRaises(exception) as context:
+                self.paginator.make_result(current_page=5, boundaries=2, around=unexcepted_value)
+            self.assertEqual(str(context.exception), message_error)
 
 
 if __name__ == '__main__':
