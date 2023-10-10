@@ -32,8 +32,7 @@ python -m src.paginator
 2. Input values in command line like in an example
 ```
 INPUT
-11 [total_pages]
-4 0 1 [current_page, boundaries, around]
+11 4 0 1 [total_pages, current_page, boundaries, around]
 OUTPUT
 ... 3 4 5 ...
 
